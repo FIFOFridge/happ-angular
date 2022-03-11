@@ -3,14 +3,16 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 
+import { StorageProviderService } from './services/storage-provider.service';
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [StorageProviderService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
