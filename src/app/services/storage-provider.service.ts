@@ -8,7 +8,7 @@ export class StorageProviderService {
     #provider: Storage
 
     constructor() {
-        this.#provider = window.localStorage // localStorage will keep data across tabs
+        this.#provider = window.localStorage // localStorage will keep data changes across tabs
     }
 
     has(key: StorageKey): boolean {
@@ -17,7 +17,7 @@ export class StorageProviderService {
         if(value === null)
             return false
 
-        return false
+        return true
     }
 
     get(key: StorageKey): StorageValue | StorageArrayValue {
@@ -31,5 +31,9 @@ export class StorageProviderService {
 
     set(key: StorageKey, value: StorageValue | StorageArrayValue): void {
         this.#provider.setItem(key, JSON.stringify(value))
+    }
+
+    remove(key: StorageKey): void {
+        this.#provider.removeItem(key)
     }
 }
