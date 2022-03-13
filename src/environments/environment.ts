@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+    production: false,
+    TAILWIND_MODE: 'build' // fix for JIT issue during development: https://github.com/tailwindlabs/tailwindcss/issues/6847
 };
 
 /*
