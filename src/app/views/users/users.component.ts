@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy } from '@angular/compiler';
 import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { delay } from 'rxjs/operators';
 import { UsersService } from 'src/app/services/users.service';
-import { UsersServiceProcessingStatus } from 'src/app/types/services/users';
+import { FetchServiceProcessingStatus } from 'src/app/types/services/fetch-service-processing-status';
 import { User } from 'src/app/types/user';
 
 @Component({
@@ -15,7 +15,7 @@ export class UsersComponent implements OnInit/* , OnDestroy*/, AfterViewInit {
     #usersService: UsersService
     #applicationRef: ApplicationRef
 
-    usersServiceProcessingStatus: UsersServiceProcessingStatus
+    usersServiceProcessingStatus: FetchServiceProcessingStatus
     users: User[]
 
     // isLoading = true
@@ -78,15 +78,15 @@ export class UsersComponent implements OnInit/* , OnDestroy*/, AfterViewInit {
     // Logic helpers for component rendering
     // ------------------------------
     isLoading(): boolean {
-        return this.usersServiceProcessingStatus === UsersServiceProcessingStatus.Ongoing || this.usersServiceProcessingStatus === UsersServiceProcessingStatus.Idle
+        return this.usersServiceProcessingStatus === FetchServiceProcessingStatus.Ongoing || this.usersServiceProcessingStatus === FetchServiceProcessingStatus.Idle
     }
 
     didSuccess(): boolean {
-        return this.usersServiceProcessingStatus === UsersServiceProcessingStatus.CompletedSuccessfully
+        return this.usersServiceProcessingStatus === FetchServiceProcessingStatus.CompletedSuccessfully
     }
 
     didFail(): boolean {
-        return this.usersServiceProcessingStatus === UsersServiceProcessingStatus.CompletedWithError
+        return this.usersServiceProcessingStatus === FetchServiceProcessingStatus.CompletedWithError
     }
 
     // updateState() {

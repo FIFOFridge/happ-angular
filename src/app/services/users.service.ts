@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { observable, Observable, of, Subject, Subscriber } from 'rxjs';
 import { catchError, tap, timeout } from 'rxjs/operators';
-import { UsersServiceProcessingStatus } from '../types/services/users';
+import { FetchServiceProcessingStatus } from '../types/services/fetch-service-processing-status';
 import { User } from '../types/user';
 import { StorageProviderService } from './storage-provider.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -16,10 +16,9 @@ export class UsersService {
     storageProviderService: StorageProviderService
     httpClient: HttpClient
 
-    #status: UsersServiceProcessingStatus
-    statusSubject: Subject<UsersServiceProcessingStatus>
+    #status: FetchServiceProcessingStatus
+    statusSubject: Subject<FetchServiceProcessingStatus>
     usersSubject: Subject<User[]>
-
     
     // Urls
     getUsersUrl = `https://gorest.co.in/public/v1/users`
@@ -38,7 +37,7 @@ export class UsersService {
         this.storageProviderService = storageProviderService
         this.httpClient = httpClient
 
-        this.#status = UsersServiceProcessingStatus.Idle // init service status
+        this.#status = FetchServiceProcessingStatus.Idle // init service status
         this.statusSubject = new Subject() // create subject for emitting status changes
 
         this.usersSubject = new Subject()
@@ -48,11 +47,11 @@ export class UsersService {
     // -----------------------------------------------------------------------------
     // Service status methods
     // -----------------------------------------------------------------------------
-    getServiceStatus(): UsersServiceProcessingStatus {
+    getServiceStatus(): FetchServiceProcessingStatus {
         return this.#status
     }
 
-    #updateServiceStatus(status: UsersServiceProcessingStatus): void {
+    #updateServiceStatus(status: FetchServiceProcessingStatus): void {
         this.#status = status
         this.statusSubject.next(this.#status) // emit changes
     }
@@ -77,7 +76,7 @@ export class UsersService {
         const users = this.#getFromStorage()
 
         // update service status
-        this.#updateServiceStatus(UsersServiceProcessingStatus.CompletedSuccessfully)
+        this.#updateServiceStatus(FetchServiceProcessingStatus.CompletedSuccessfully)
 
         // update users from storage
         this.usersSubject.next(users)
@@ -90,7 +89,7 @@ export class UsersService {
         if(this.hasInStorage())
             throw new Error(`Storage already contains users, clear data before submitting request`)
 
-        if(this.#status !== UsersServiceProcessingStatus.Idle)
+        if(this.#status !== FetchServiceProcessingStatus.Idle)
             throw new Error(`Service cannot execute submitRequest with current state`)
 
         console.log("Fetching users from API...")
@@ -115,7 +114,7 @@ export class UsersService {
             if(!isError(response)) {
                 const requestResponse = response as UsersQuery
                 this.#updateStorage(requestResponse.data) // update storage
-                this.#updateServiceStatus(UsersServiceProcessingStatus.CompletedSuccessfully) // update service state
+                this.#updateServiceStatus(FetchServiceProcessingStatus.CompletedSuccessfully) // update service state
                 this.usersSubject.next(requestResponse.data) // emit data changes
             }
         })
@@ -135,7 +134,7 @@ export class UsersService {
     }
 
     clear(): void {
-        this.#updateServiceStatus(UsersServiceProcessingStatus.Idle)
+        this.#updateServiceStatus(FetchServiceProcessingStatus.Idle)
         this.storageProviderService.remove("users-service-data")
     }
 
@@ -145,7 +144,7 @@ export class UsersService {
             console.error(`User service error occurred: ${error}`)
 
             // update status
-            this.#updateServiceStatus(UsersServiceProcessingStatus.CompletedWithError)
+            this.#updateServiceStatus(FetchServiceProcessingStatus.CompletedWithError)
 
             // rethrow error if fallback not specified
             if(fallback === undefined)

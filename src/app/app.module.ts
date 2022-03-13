@@ -8,11 +8,19 @@ import { StorageProviderService } from './services/storage-provider.service';
 import { AppRoutingModule } from './app-routing.module';
 // import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
+import { PostComponent } from './components/posts/post.component';
+// import { CommentComponent } from './components/posts/comment.component';
+import { PostsComponent } from './views/posts/posts.component';
+import { TodoComponent } from './components/todo/todo.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UsersComponent
+    UsersComponent,
+    PostsComponent,
+    PostComponent,
+    TodoComponent,
+    // CommentComponent
   ],
   imports: [
     BrowserModule,

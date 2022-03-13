@@ -1,0 +1,29 @@
+
+<div>
+    <!-- Display posts -->
+    <div class="flex flex-col px-4 py-6 ml-4 text-black bg-blue-300 bg-opacity-60 rounded-lg">
+        <div class="text-xl my-6 font-bold">
+            {{ title }}
+        </div>
+        <div class="text-base my-2">
+            {{ body }}
+        </div>
+    </div>
+
+    <!-- Display comments if any -->
+    <ng-container *ngIf="comments.length > 0">
+        <div class="flex flex-col py-4 ml-14">
+            <div *ngFor="let comment of comments; index as i;" class="flex flex-col my-2 md:my-4 py-4 px-2 text-black bg-yellow-200 bg-opacity-50 rounded-lg">
+                <div class="first:my-6 my-2 text-lg font-bold">
+                    {{ comment.name }}
+                </div>
+                <div class="first:my-6 my-2 text-base">
+                    {{ comment.body }}
+                </div>
+                <div class="first:my-6 my-2 text-sm underline">
+                    {{ "By: " + comment.email }}
+                </div>                                
+            </div>
+        </div>
+    </ng-container>
+</div>
