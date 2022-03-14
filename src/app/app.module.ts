@@ -13,6 +13,7 @@ import { PostComponent } from './components/posts/post.component';
 import { PostsComponent } from './views/posts/posts.component';
 import { TodoComponent } from './components/todo/todo.component';
 import { TodosComponent } from './views/todos/todos.component';
+import { HomeComponent } from './views/home/home.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { TodosComponent } from './views/todos/todos.component';
     PostComponent,
     TodoComponent,
     TodosComponent,
+    HomeComponent,
     // CommentComponent
   ],
   imports: [
