@@ -1,0 +1,20 @@
+<!-- This should be ng-container but Im running out of time :d -->
+<div>
+    <!-- Display posts -->
+    <div class="flex flex-col px-4 py-6 ml-4 text-black bg-blue-300 bg-opacity-60 rounded-lg">
+        <!-- Title + conditional check mark -->
+        <div class="flex flex-row text-xl my-6" >
+            <div class="pr-4" *ngIf="completed;">
+                {{ "✅" }}
+            </div>            
+            <div class="font-bold" [class.line-through]="completed">
+                <!-- {{ "Title: " + title }} -->
+                {{ title }}
+            </div>
+        </div>
+        <!-- "Valid until" label -->
+        <div class="text-base my-2 italic">
+            {{ "Valid until: " + deadline }}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+<!-- Root component container -->
+<div class="flex flex-row mt-2 md:mx-auto w-full">
+
+    <!-- Display while loading -->
+    <ng-container *ngIf="isLoading()">
+        <div class="flex flex-row items-center justify-center text-blue-700 w-full">
+            <!-- spinner container -->
+            <div class="flex flex-col items-center justify-center text-3xl">
+                <div>{{ "Loading todos..." }}</div>
+                <svg class="animate-spin w-16 h-16" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                </svg>
+            </div>
+        </div>
+    </ng-container>
+
+    <!-- Display when failed -->
+    <ng-container *ngIf="!isLoading() && didFail()">
+        <div class="flex flex-col items-center justify-center">
+            <div class="text-2xl text-red-800">
+                {{ "Unable to fetch todo's" }}
+            </div>
+            <div>
+                <button (click)="reload()" class="px-4 py-2 text-xl bg-blue-800 text-white">Retry</button>
+            </div>
+        </div>
+    </ng-container>
+
+    <!-- Display when loading successes -->
+    <ng-container *ngIf="!isLoading() && didSuccess()">
+        <div class="flex flex-col">
+            <app-todo *ngFor="let todo of todos;" class="my-4 md:my-8"
+                [title]="todo.title"
+                [completed]="todo.status === 'completed'"
+                [deadline]="todo.due_on.toString()"
+            >
+            </app-todo>
+        </div>
+    </ng-container>
+
+</div>
