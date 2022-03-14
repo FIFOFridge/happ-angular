@@ -7,6 +7,7 @@ import { StorageProviderService } from './storage-provider.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UsersQuery } from '../types/API/usersQuery';
 import { isError } from '../helpers/isError';
+import { token } from '../helpers/token';
 
 @Injectable({
     providedIn: 'root'
@@ -21,12 +22,18 @@ export class UsersService {
     usersSubject: Subject<User[]>
     
     // Urls
-    getUsersUrl = `https://gorest.co.in/public/v1/users`
+    usersUrl = `https://gorest.co.in/public/v1/users`
+    // is v1 API also correct for POST request?
+    postUsersUrl = `https://gorest.co.in/public/v2/users`
     timeout = 1000 * 10 // in ms
 
     // Request headers
     httpOptions = {
-        headers: new HttpHeaders({ 'Content-Type': 'application/json' }) // set required response format to json
+        headers: new HttpHeaders({
+            'Accept': "application/json", // set required response format to json
+            'Content-Type': 'application/json', 
+            'Authorization': "Bearer " + token,
+        })
     }
 
     constructor(
@@ -94,7 +101,7 @@ export class UsersService {
 
         console.log("Fetching users from API...")
 
-        this.httpClient.get(this.getUsersUrl, this.httpOptions)
+        this.httpClient.get(this.usersUrl, this.httpOptions)
         .pipe(
             // ! configure timeout
             timeout({
@@ -125,8 +132,57 @@ export class UsersService {
         return this.storageProviderService.get("users-service-data") as User[]
     }
 
-    tryAdd(): boolean {
-        throw new Error(`Not implemented yet`)
+    tryAdd(name: string, email: string, gender: string, isActive: string): void {
+        // curl -i -H "Accept:application/json" -H "Content-Type:application/json" 
+        // -H "Authorization: Bearer ACCESS-TOKEN" -XPOST "https://gorest.co.in/public/v2/users" -
+        // d '{"name":"Tenali Ramakrishna", "gender":"male", "email":"tenali.ramakrishna@15ce.com", 
+        // "status":"active"}' 
+
+        const status = isActive === "active" ? "active" : "inactive"
+
+        const body = {
+            name: name,
+            email: email,
+            gender: gender,
+            status: status
+        }
+
+        this.httpClient.post(this.postUsersUrl, JSON.stringify(body), this.httpOptions)
+        .pipe(
+            // TODO: setup error handle and timeout
+        )
+        .subscribe(response => { // just add to array if passed without error
+            // TODO: handle state and display error
+            // some global dialog service should do the job?
+            if(isError(response))
+                console.error(response)
+
+            if(!isError(response)) {
+                const fromStorage = this.#getFromStorage()
+
+                // // grab max id from users
+                // let maxId = fromStorage[0].id
+                // fromStorage.forEach(user => {
+                //     if(user.id > maxId)
+                //         maxId = user.id
+                // })
+    
+                // // manually push change
+                // fromStorage.push({
+                //     id: (response as User).id,
+                //     name: name,
+                //     email: email,
+                //     gender: gender,
+                //     status: status
+                // })
+
+                // insert at the begging
+                const newArray = [response as User].concat(fromStorage)
+    
+                this.#updateStorage(newArray) // update storage
+                this.usersSubject.next(newArray) // emit data changes
+            }
+        })
     }
 
     #updateStorage(users: User[]): void {
@@ -141,7 +197,8 @@ export class UsersService {
     handleError<T>(fallback?: T/*err: any, caught: Observable<Object>*/) {
         return (error: any) => {
             // log error
-            console.error(`User service error occurred: ${error}`)
+            console.error(`User service error occurred: `)
+            console.error(error)
 
             // update status
             this.#updateServiceStatus(FetchServiceProcessingStatus.CompletedWithError)

@@ -14,6 +14,7 @@ import { PostsComponent } from './views/posts/posts.component';
 import { TodoComponent } from './components/todo/todo.component';
 import { TodosComponent } from './views/todos/todos.component';
 import { HomeComponent } from './views/home/home.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { HomeComponent } from './views/home/home.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [StorageProviderService],
   bootstrap: [AppComponent]

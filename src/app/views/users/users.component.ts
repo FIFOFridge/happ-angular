@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy } from '@angular/compiler';
 import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { delay } from 'rxjs/operators';
 import { UsersService } from 'src/app/services/users.service';
 import { FetchServiceProcessingStatus } from 'src/app/types/services/fetch-service-processing-status';
@@ -17,6 +18,13 @@ export class UsersComponent implements OnInit/* , OnDestroy*/, AfterViewInit {
 
     usersServiceProcessingStatus: FetchServiceProcessingStatus
     users: User[]
+
+    userForm = new FormGroup({
+        userName: new FormControl(''),
+        userEmail: new FormControl(''),
+        userGender: new FormControl(''),
+        userStatus: new FormControl('')
+    })
 
     // isLoading = true
     // didFail = false
@@ -65,8 +73,18 @@ export class UsersComponent implements OnInit/* , OnDestroy*/, AfterViewInit {
     //     // inline callbacks don't require cleanup
     // }    
 
-    handleAddUser(): void {
-        throw new Error(`Not implemented`)
+    onSubmitUser() {
+        // todo: validation
+        console.log(this.userForm.value)
+
+        const status = this.userForm.value.userStatus === true ? "active" : "inactive"
+
+        this.#usersService.tryAdd(
+            this.userForm.value.userName,
+            this.userForm.value.userEmail,
+            this.userForm.value.userGender,
+            status,
+        )
     }
 
     reload(): void {
