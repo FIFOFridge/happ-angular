@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, of, Subject, timeout } from 'rxjs';
 import { isError } from '../helpers/isError';
-import { TodosQuery } from '../types/API/todosQuery';
+import { TodosQuery } from '../types/API/todos-query';
 import { FetchServiceProcessingStatus } from '../types/services/fetch-service-processing-status';
 import { Todo } from '../types/todo';
 import { StorageProviderService } from './storage-provider.service';
@@ -108,15 +108,13 @@ export class TodosService {
                 catchError(this.handleError(undefined).bind(this)),
             )
             .subscribe(response => {
-                // console.log(`Subscriber received: ${JSON.stringify(response)}`)
-
                 if(isError(response))
                     return
 
                 const requestResponse = response as TodosQuery
                 
                 // apply Date formatting
-                const todosFormatted = requestResponse.data.forEach(todo => todo.due_on = new Date(todo.due_on).toLocaleDateString())
+                /* const todosFormatted =  */requestResponse.data.forEach(todo => todo.due_on = new Date(todo.due_on).toLocaleDateString())
 
                 this.#updateStorage(requestResponse.data) // update storage
                 this.#updateServiceStatus(FetchServiceProcessingStatus.CompletedSuccessfully) // update service state

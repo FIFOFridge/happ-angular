@@ -7,12 +7,12 @@ import { UsersComponent } from './views/users/users.component';
 
 const routes: Routes = [
     {
-        path: '', 
+        path: '',
         pathMatch: 'full',
         component: HomeComponent
-    },    
+    },
     {
-        path: "users", 
+        path: "users",
         component: UsersComponent
     },
     {
@@ -25,7 +25,7 @@ const routes: Routes = [
     },
     // Redirect invalid/unmatched URLs to home
     {
-        path: '**', 
+        path: '**',
         pathMatch: 'full',
         component: HomeComponent
     }

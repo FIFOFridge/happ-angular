@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy } from '@angular/compiler';
-import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ApplicationRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { delay } from 'rxjs/operators';
 import { UsersService } from 'src/app/services/users.service';
@@ -9,12 +8,11 @@ import { User } from 'src/app/types/user';
 @Component({
     selector: 'app-users',
     templateUrl: './users.component.html',
-    styleUrls: ['./users.component.css'],
+    // styleUrls: ['./users.component.css'],
     providers: [UsersService], // inject UsersService
 })
 export class UsersComponent implements OnInit/* , OnDestroy*/, AfterViewInit {
     #usersService: UsersService
-    #applicationRef: ApplicationRef
 
     usersServiceProcessingStatus: FetchServiceProcessingStatus
     users: User[]
@@ -26,16 +24,10 @@ export class UsersComponent implements OnInit/* , OnDestroy*/, AfterViewInit {
         userStatus: new FormControl('')
     })
 
-    // isLoading = true
-    // didFail = false
-    // didSuccess = false
-
     constructor(
         usersService: UsersService,
-        applicationRef: ApplicationRef
     ) { 
         this.#usersService = usersService
-        this.#applicationRef = applicationRef
 
         this.usersServiceProcessingStatus = this.#usersService.getServiceStatus()
         this.users = []
@@ -45,7 +37,7 @@ export class UsersComponent implements OnInit/* , OnDestroy*/, AfterViewInit {
     // Lifecycle
     // ------------------------------
     ngOnInit(): void {
-        // Subscribe to service changes
+        // ! Subscribe to service changes
         this.#usersService.statusSubject
         .pipe(
             delay(0) // fix synchronous loading from storage (NG0100) "Expression has changed after it was checked": https://blog.angular-university.io/angular-debugging/
@@ -53,11 +45,11 @@ export class UsersComponent implements OnInit/* , OnDestroy*/, AfterViewInit {
         .subscribe(newValue => {
             this.usersServiceProcessingStatus = newValue
         })
+
+        // ! Subscribe to users changes
         this.#usersService.usersSubject.subscribe(newValue => { 
             this.users = newValue
         })
-
-        // this.updateState()
     }
   
     ngAfterViewInit(): void {
@@ -106,10 +98,4 @@ export class UsersComponent implements OnInit/* , OnDestroy*/, AfterViewInit {
     didFail(): boolean {
         return this.usersServiceProcessingStatus === FetchServiceProcessingStatus.CompletedWithError
     }
-
-    // updateState() {
-    //     this.isLoading = this.usersServiceProcessingStatus === UsersServiceProcessingStatus.Ongoing || this.usersServiceProcessingStatus === UsersServiceProcessingStatus.Idle
-    //     this.didFail = this.usersServiceProcessingStatus === UsersServiceProcessingStatus.CompletedWithError
-    //     this.didSuccess = this.usersServiceProcessingStatus === UsersServiceProcessingStatus.CompletedSuccessfully
-    // }
 }

@@ -5,7 +5,7 @@ import { FetchServiceProcessingStatus } from '../types/services/fetch-service-pr
 import { User } from '../types/user';
 import { StorageProviderService } from './storage-provider.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { UsersQuery } from '../types/API/usersQuery';
+import { UsersQuery } from '../types/API/users-query';
 import { isError } from '../helpers/isError';
 import { token } from '../helpers/token';
 

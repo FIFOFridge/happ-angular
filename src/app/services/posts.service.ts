@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { catchError, forkJoin, of, Subject, timeout } from 'rxjs'
 import { isError } from '../helpers/isError'
-import { CommentsQuery } from '../types/API/commentsQuery'
-import { PostsQuery } from '../types/API/postsQuery'
+import { CommentsQuery } from '../types/API/comments-query'
+import { PostsQuery } from '../types/API/posts-query'
 import { Post } from '../types/post'
 import { PostComment } from '../types/post-comment'
 import { FetchServiceProcessingStatus } from '../types/services/fetch-service-processing-status'
@@ -42,8 +42,8 @@ export class PostsService {
 
         this.#status = FetchServiceProcessingStatus.Idle // init service status
         this.statusSubject = new Subject() // create subject for emitting status changes
-
         this.postsSubject = new Subject()
+        
         // this.comments = [] // create empty comments array
     }
 
@@ -73,7 +73,6 @@ export class PostsService {
         // make sure posts are in storage
         if(!this.hasInStorage()) 
             throw new Error(`Storage don't contains posts`)
-
 
         console.log("Loading posts from storage...")
         const posts = this.#getFromStorage()
@@ -114,8 +113,6 @@ export class PostsService {
             catchError(this.handleError(undefined).bind(this)), 
         )
         .subscribe(response => { 
-            // console.log(`Subscriber received: ${JSON.stringify(response)}`) 
-            
             if(isError(response))
                 return
 

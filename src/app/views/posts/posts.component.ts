@@ -30,7 +30,7 @@ export class PostsComponent implements OnInit {
     // Lifecycle
     // ------------------------------
     ngOnInit(): void {
-        // Subscribe to service changes
+        // ! Subscribe to service changes
         this.#postsService.statusSubject
         .pipe(
             delay(0) // fix synchronous loading from storage (NG0100) "Expression has changed after it was checked": https://blog.angular-university.io/angular-debugging/
@@ -38,11 +38,11 @@ export class PostsComponent implements OnInit {
         .subscribe(newValue => {
             this.postsServiceStatus = newValue
         })
+        
+        // ! Subscribe to posts changes
         this.#postsService.postsSubject.subscribe(newValue => { 
             this.posts = newValue
         })
-
-        // this.updateState()
     }
   
     ngAfterViewInit(): void {

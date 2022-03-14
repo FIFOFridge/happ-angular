@@ -6,7 +6,6 @@ import { UsersComponent } from './views/users/users.component';
 
 import { StorageProviderService } from './services/storage-provider.service';
 import { AppRoutingModule } from './app-routing.module';
-// import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PostComponent } from './components/posts/post.component';
 // import { CommentComponent } from './components/posts/comment.component';
@@ -17,24 +16,23 @@ import { HomeComponent } from './views/home/home.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    UsersComponent,
-    PostsComponent,
-    PostComponent,
-    TodoComponent,
-    TodosComponent,
-    HomeComponent,
-    // CommentComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    ReactiveFormsModule
-  ],
-  providers: [StorageProviderService],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        UsersComponent,
+        PostsComponent,
+        PostComponent,
+        TodoComponent,
+        TodosComponent,
+        HomeComponent,
+        // CommentComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        ReactiveFormsModule
+    ],
+    providers: [StorageProviderService],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
- 
